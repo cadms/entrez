@@ -39,7 +39,11 @@ module Entrez
 
     def perform(utility_path, db, params = {})
       respect_query_limit unless ignore_query_limit?
-      get utility_path, :query => {db: db}.merge(params)
+      if params[:id] && params[:id].length > 100
+        post utility_path, :body => {db: db}.merge(params)
+      else
+        get utility_path, :query => {db: db}.merge(params)
+      end
     end
 
     # Take a ruby hash and convert it to an ENTREZ search term.
