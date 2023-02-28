@@ -15,5 +15,5 @@ end
 
 # Default return mode to XML.
 Entrez.default_params(
-  retmode: :xml,
+  retmode: :xml
 )

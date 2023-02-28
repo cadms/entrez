@@ -39,7 +39,7 @@ module Entrez
 
     def perform(utility_path, db, params = {})
       respect_query_limit unless ignore_query_limit?
-      if params[:id] && params[:id].length > 100
+      if params[:id] && Array(params[:id]).length > 100
         post utility_path, :body => {db: db}.merge(params)
       else
         get utility_path, :query => {db: db}.merge(params)

@@ -13,7 +13,7 @@ describe Entrez do
   end
 
   it '#ESummary retrieves results' do
-    response = Entrez.ESummary('genomeprj', id: 28911)
+    response = Entrez.ESummary('bioproject', id: 28911)
     response.body.should include('Hapmap')
   end
 
@@ -25,13 +25,13 @@ describe Entrez do
   context '#ESearch' do
 
     it 'retrieves results' do
-      response = Entrez.ESearch('genomeprj', {WORD: 'hapmap', SEQS: 'inprogress'})
-      response.body.should include('28911')
+      response = Entrez.ESearch('bioproject', {WORD: 'hapmap', TITLE: 'AmelHap: Leveraging'})
+      response.body.should include('936384')
     end
 
     it 'accepts string as search_terms parameter' do
-      response = Entrez.ESearch('genomeprj', 'hapmap[WORD]')
-      response.ids.should include(60153)
+      response = Entrez.ESearch('bioproject', 'hapmap[WORD]')
+      response.ids.should include(737237)
     end
 
     it 'handles array of uids' do
