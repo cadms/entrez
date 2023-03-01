@@ -1,5 +1,4 @@
 require 'httparty'
-require 'httparty/response_ext'
 require 'query_string_normalizer'
 require 'entrez/query_limit'
 
@@ -29,6 +28,7 @@ module Entrez
     def ESearch(db, search_terms = {}, params = {})
       params[:term] = search_terms.is_a?(Hash) ? convert_search_term_hash(search_terms) : search_terms
       response = perform '/esearch.fcgi', db, params
+      parse_ids_and_extend response
       response
     end
 
@@ -65,6 +65,28 @@ module Entrez
       http_proxy addr, port, user, pass
     end
 
+    def parse_ids_and_extend(response)
+      response.instance_eval do
+        def ids
+          if parse_ids?
+            return @ids if @ids
+            id_list = parsed_response['eSearchResult']['IdList']
+            if id_list && id_list['Id']
+              id_content = id_list['Id']
+              id_content = [id_content].flatten
+              @ids = id_content.map(&:to_i)
+            else
+              @ids = []
+            end
+          end
+        end
+
+        # Parse only if this is an ESearch request and in xml format.
+        def parse_ids?
+          (request.path.to_s.match /esearch/) && (request.options[:query][:retmode].nil? || retmode == :xml)
+        end
+      end
+    end
   end
 
   class UnknownOperator < StandardError

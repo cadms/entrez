@@ -1,6 +1,14 @@
 require 'spec_helper'
+require 'debug'
 
 describe Entrez do
+  before(:all) do
+    WebMock.allow_net_connect!
+  end
+
+  after(:all) do
+    WebMock.disable_net_connect!
+  end
 
   it 'should have default params for tool and email' do
     Entrez.default_params[:tool].should eq('ruby')

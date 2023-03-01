@@ -19,14 +19,14 @@ module Macros
   # Ignore Entrez query limit unless told not to.
   def fake_service(service, fixture_file_name, options = {}, &block)
     file_contents = fixture_file(fixture_file_name).read
-    FakeWeb.register_uri(:get, Regexp.new(service.to_s.downcase), body: file_contents, content_type: 'text/xml')
+    stub_get = stub_request(:get, Regexp.new(service.to_s.downcase)).to_return(body: file_contents, headers: { 'Content-Type' => 'application/xml' })
     if options.fetch(:ignore_query_limit, true)
       Entrez.ignore_query_limit(&block)
     else
       block.call
     end
   ensure
-    FakeWeb.clean_registry
+    remove_request_stub(stub_get)
   end
 
 end

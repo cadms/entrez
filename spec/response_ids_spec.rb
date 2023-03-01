@@ -1,7 +1,7 @@
 require 'spec_helper'
+require 'debug'
 
-describe HTTParty::ResponseIds do
-
+describe Entrez do
   it 'parses body and returns IDs' do
     fake_service :ESearch, 'esearch_1_2_3.xml' do
       response = Entrez.ESearch('asdf')
@@ -22,5 +22,4 @@ describe HTTParty::ResponseIds do
       response.ids.should == [1]
     end
   end
-
 end

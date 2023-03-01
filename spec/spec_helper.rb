@@ -1,5 +1,5 @@
 require 'awesome_print'
-require 'fakeweb'
+require 'webmock/rspec'
 require 'pathname'
 
 # Require the gem source.
